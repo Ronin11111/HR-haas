@@ -36,7 +36,19 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // Proxy属性实现vue-cli的代理请求
+    proxy: {
+      // 当请求地址中包含api时，开启代理请求
+      // 可指定多个服务器分别代理
+      '/api': {
+        // target：即代理的地址
+        target: 'http://ihrm-java.itheima.net/',
+        // changeOrigin即是否开启路由，为true时，可让本地代理我们发出请求
+        changeOrigin: true
+      }
+    }
+    // 在代理时，需注释mock的加载，因为mock-server会导致代理服务的异常
+    // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

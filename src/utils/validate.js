@@ -18,3 +18,10 @@ export function validUsername(str) {
   const valid_map = ['admin', 'editor']
   return valid_map.indexOf(str.trim()) >= 0
 }
+
+// 校验手机号规则
+export function validMobile(str){
+  // 使用正则的test()方法检测
+  // 注意：需要return结果
+  return /^1[3-9]\d{9}$/.test(str)
+}

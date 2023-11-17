@@ -6,6 +6,9 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
+// 引入自定义指定文件
+import * as directives from '@/directives'
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -14,6 +17,11 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+
+// 注册全局自定义指令
+// 使用Object.keys：将对象中的属性转为数组
+// 在利用数组的forEach():遍历指令，完成注册
+Object.keys(directives).forEach(key => Vue.directive(key, directives[key]))
 
 /**
  * If you don't want to use mock-server
