@@ -27,9 +27,11 @@
                 label="操作"
                 align="center"
               >
-                <el-button size="small" type="success">分配权限</el-button>
-                <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger">删除</el-button>
+                <template slot-scope="{row}">
+                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button size="small" type="danger" @click="deleteInfo(row.id)">删除</el-button>
+                </template>
               </el-table-column>
             </el-table>
             <el-row type="flex" justify="center" align="middle" style="height:60px">
@@ -73,7 +75,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -118,6 +120,18 @@ export default {
     // 获取公司信息
     async getCompany() {
       this.formData = await getCompanyInfo(this.companyId)
+    },
+
+    // 删除角色
+    async deleteInfo(id) {
+      try {
+        await this.$confirm('确认删除该角色信息?')
+        await deleteRole(id)
+        this.getInfolist()
+        this.$message('删除角色成功！')
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }
