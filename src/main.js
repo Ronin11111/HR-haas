@@ -9,6 +9,9 @@ import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 // 引入自定义指定文件
 import * as directives from '@/directives'
 
+// 引入公共注册组件
+import Component from '@/components'
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -40,6 +43,8 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
+
+Vue.use(Component)
 
 Vue.config.productionTip = false
 
