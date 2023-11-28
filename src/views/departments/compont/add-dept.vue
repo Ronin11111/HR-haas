@@ -72,7 +72,7 @@ export default {
   data() {
     const checkName = async(rule, value, callback) => {
       const { depts } = await getDepartments()
-      let isExist = null
+      let isExist = false
       if (this.formData.id) {
         // 编辑功能：查找同级下的所有节点(排除自身)，并判断是否有同名的节点
         isExist = depts.filter(item => item.id !== this.formData.id && item.pid === this.formData.pid).some(item => item.name === value)
@@ -85,7 +85,7 @@ export default {
     // 注意：这里不要尾随，
     const checkCode = async(rule, value, callback) => {
       const { depts } = await getDepartments()
-      let isExist = null
+      let isExist = false
       if (this.formData.id) {
         // 编辑功能：排除自身节点外，部门编号不重复且不为空
         isExist = depts.some(item => item.id !== this.formData.id && item.code === this.formData.code)
