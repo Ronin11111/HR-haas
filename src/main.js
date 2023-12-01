@@ -12,6 +12,9 @@ import * as directives from '@/directives'
 // 引入公共注册组件
 import Component from '@/components'
 
+// 引入全局过滤器
+import * as filters from '@/filters'
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -23,9 +26,11 @@ import '@/permission' // permission control
 
 // 注册全局自定义指令
 // 使用Object.keys：将对象中的属性转为数组
-// 在利用数组的forEach():遍历指令，完成注册
+// 在利用Object数组的forEach():遍历指令，完成注册
 Object.keys(directives).forEach(key => Vue.directive(key, directives[key]))
 
+// 注册全局过滤器
+Object.keys(filters).forEach(key => { Vue.filter(key, filters[key]) })
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

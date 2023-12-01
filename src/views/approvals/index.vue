@@ -1,8 +1,5 @@
 <template>
   <div class="dashboard-container">
-    <PageTools>
-      <el-button slot="after">你好</el-button>
-    </PageTools>
     <div class="app-container">
       <h2>
         审批

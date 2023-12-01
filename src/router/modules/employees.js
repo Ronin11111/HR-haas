@@ -12,5 +12,12 @@ export default {
     // 在左侧导航栏中使用
       title: '员工'
     }
+  }, {
+    path: 'detail/:id?', // 路由参数部分？表示参数可传可不传
+    hidden: true, // 不在左侧菜单栏显示
+    component: () => import ('@/views/employees/detail'),
+    meta: {
+      title: '员工详情'
+    }
   }]
 }
