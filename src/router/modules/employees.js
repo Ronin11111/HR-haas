@@ -25,7 +25,8 @@ export default {
     hidden: true,
     component: () => import('@/views/employees/print'),
     meta: {
-      title: '信息打印'
+      title: '信息打印',
+      icon: 'people'
     }
   }
   ]

@@ -371,13 +371,13 @@ export default {
   },
   methods: {
     async getUserDetail() {
-      if (this.userInfo.staffPhoto && this.userInfo.staffPhoto.trim()) {
+      if (this.userInfo.staffPhoto.trim()) {
         this.$refs.staffAvatr.fileList = [{ url: this.userInfo.staffPhoto, upload: true }]
       }
       this.userInfo = await getUserDetail(this.userId)
     },
     async getPersonalDetail() {
-      if (this.formData.staffPhoto && this.userInfo.staffPhoto.trim()) {
+      if (this.userInfo.staffPhoto.trim()) {
         this.$refs.staffPhoto.fileList = [{ url: this.formData.staffPhoto, upload: true }]
       }
       this.formData = await getPersonalDetail(this.userId)
@@ -403,7 +403,7 @@ export default {
           this.$message.error('图片正在上传中')
           return
         }
-        await saveUserDetailById({ ...this.formData, staffPhoto: fileList && fileList.length ? fileList[0].url : ' ' })
+        await saveUserDetailById({ ...this.formData, id: this.userId, staffPhoto: fileList && fileList.length ? fileList[0].url : ' ' })
         this.$message.success('保存成功！')
       } catch (err) {
         console.log(err)

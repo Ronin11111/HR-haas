@@ -9,6 +9,8 @@
           <el-button size="small" type="primary" @click="isShow=true">新增员工</el-button>
         </template>
       </PageTools>
+      <!-- 新增员工 -->
+      <AddEmployee :show-dialog.sync="isShow" />
       <el-card>
         <el-table v-loading="loading" border :data="employeeList" style="width: 100%">
           <el-table-column type="index" label="序号" sortable="" />
@@ -42,7 +44,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="changeRole(row.id)">角色</el-button>
               <el-button type="text" size="small" @click="delEmployee(row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -59,6 +61,7 @@
         <el-dialog title="二维码" :visible.sync="showQr">
           <canvas ref="qrcode" /></el-dialog>
       </el-card>
+      <AssginRole ref="assgin" :is-show.sync="showRole" :role-id="roleId" />
     </div>
   </div>
 </template>
@@ -66,13 +69,15 @@
 <script>
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
+import AssginRole from '@/views/employees/component/assgin-role.vue'
 import AddEmployee from '@/views/employees/component/add-employee.vue'
 import { formatDate } from '@/filters'
 import QrCode from 'qrcode'
 
 export default {
   components: {
-    AddEmployee
+    AddEmployee,
+    AssginRole
   },
   data() {
     return {
@@ -84,7 +89,9 @@ export default {
       },
       loading: false, // 遮罩效果
       isShow: false,
-      showQr: false
+      showQr: false,
+      showRole: false, // 角色弹框
+      roleId: '' // 对应的角色ID
     }
   },
   created() {
@@ -172,6 +179,13 @@ export default {
       } else {
         this.$message.warning('该用户为上传头像！')
       }
+    },
+    // 展开角色管理
+    async changeRole(id) {
+      this.roleId = id
+      // 调用子组件上的方法
+      await this.$refs.assgin.getUserDetail(id)
+      this.showRole = true
     }
   }
 }
