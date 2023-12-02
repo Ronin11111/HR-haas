@@ -4,8 +4,13 @@
       <el-card>
         <el-tabs>
           <el-tab-pane label="角色管理">
-            <el-row style="height:60px">
-              <el-button type="primary" size="small" icon="el-icon-plus" @click="dialogShow=true">
+            <el-row style="height: 60px">
+              <el-button
+                type="primary"
+                size="small"
+                icon="el-icon-plus"
+                @click="dialogShow = true"
+              >
                 新增角色
               </el-button>
             </el-row>
@@ -15,26 +20,40 @@
                 label="序号"
                 width="120"
                 align="center"
-              /> <el-table-column
+              />
+              <el-table-column
                 label="角色名称"
                 width="240"
                 prop="name"
                 align="center"
-              /> <el-table-column
-                label="描述"
-                prop="description"
-              /> <el-table-column
-                label="操作"
-                align="center"
-              >
-                <template slot-scope="{row}">
-                  <el-button size="small" type="success">分配权限</el-button>
-                  <el-button size="small" type="primary" @click="editInfo(row.id)">编辑</el-button>
-                  <el-button size="small" type="danger" @click="deleteInfo(row.id)">删除</el-button>
+              />
+              <el-table-column label="描述" prop="description" />
+              <el-table-column label="操作" align="center">
+                <template slot-scope="{ row }">
+                  <el-button
+                    size="small"
+                    type="success"
+                    @click="assignPerm(row.id)"
+                  >分配权限</el-button>
+                  <el-button
+                    size="small"
+                    type="primary"
+                    @click="editInfo(row.id)"
+                  >编辑</el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="deleteInfo(row.id)"
+                  >删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
-            <el-row type="flex" justify="center" align="middle" style="height:60px">
+            <el-row
+              type="flex"
+              justify="center"
+              align="middle"
+              style="height: 60px"
+            >
               <el-pagination
                 :current-page="page.page"
                 :page-size="page.pagesize"
@@ -52,26 +71,49 @@
                 :closable="false"
                 show-ico
               />
-              <el-form label-width="120px" style="margin-top:40px">
+              <el-form label-width="120px" style="margin-top: 40px">
                 <el-form-item label="公司名称">
-                  <el-input v-model="formData.name" disabled style="width: 400px;" />
+                  <el-input
+                    v-model="formData.name"
+                    disabled
+                    style="width: 400px"
+                  />
                 </el-form-item>
                 <el-form-item label="公司地址">
-                  <el-input v-model="formData.companyAddress" disabled style="width: 400px;" />
+                  <el-input
+                    v-model="formData.companyAddress"
+                    disabled
+                    style="width: 400px"
+                  />
                 </el-form-item>
                 <el-form-item label="邮箱">
-                  <el-input v-model="formData.mailbox" disabled style="width: 400px;" />
+                  <el-input
+                    v-model="formData.mailbox"
+                    disabled
+                    style="width: 400px"
+                  />
                 </el-form-item>
                 <el-form-item label="备注">
-                  <el-input v-model="formData.remarks" disabled type="textarea" :row="3" style="width: 400px;" />
+                  <el-input
+                    v-model="formData.remarks"
+                    disabled
+                    type="textarea"
+                    :row="3"
+                    style="width: 400px"
+                  />
                 </el-form-item>
               </el-form>
             </el-row>
           </el-tab-pane>
         </el-tabs>
-        <!-- 弹出层组件 -->
+        <!-- 编辑部门弹出层组件 -->
         <el-dialog title="编辑部门" :visible="dialogShow" @close="btnCancel">
-          <el-form ref="formRole" :model="roleForm" :rules="rules" label-width="120px">
+          <el-form
+            ref="formRole"
+            :model="roleForm"
+            :rules="rules"
+            label-width="120px"
+          >
             <el-form-item label="角色名称" prop="name">
               <el-input v-model="roleForm.name" />
             </el-form-item>
@@ -83,7 +125,30 @@
           <el-row slot="footer" type="flex" justify="center">
             <el-col :span="6">
               <el-button size="small" @click="btnCancel">取消</el-button>
-              <el-button size="small" type="primary" @click="btnOK">确定</el-button>
+              <el-button
+                size="small"
+                type="primary"
+                @click="btnOK"
+              >确定</el-button>
+            </el-col>
+          </el-row>
+        </el-dialog>
+        <!-- 分配权限弹出层 -->
+        <el-dialog title="分配权限" :visible.sync="showPermiss" @click="isCancle">
+          <el-tree
+            ref="permTree"
+            :data="permList"
+            :props="propRule"
+            :default-expand-all="true"
+            :show-checkbox="true"
+            :check-strictly="true"
+            :default-checked-keys="checkList"
+            node-key="id"
+          />
+          <el-row type="flex" justify="center">
+            <el-col :span="6">
+              <el-button size="small" type="primary" @click="isOk">确认</el-button>
+              <el-button size="small" @click="isCancle">取消</el-button>
             </el-col>
           </el-row>
         </el-dialog>
@@ -93,8 +158,19 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole, updateRole, getRoleDetail, addRole } from '@/api/setting'
+import {
+  getRoleList,
+  getCompanyInfo,
+  deleteRole,
+  updateRole,
+  getRoleDetail,
+  addRole,
+  assignPerm
+} from '@/api/setting'
+import { getPermissionList } from '@/api/permission'
+import { tranListToTree } from '@/utils'
 import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -104,17 +180,22 @@ export default {
         pagesize: 5,
         total: 0 // 记录总数
       }, // 分页信息
-      formData: {
-
-      }, // 公司信息
-      dialogShow: false,
+      formData: {}, // 公司信息
+      dialogShow: false, // 编辑部门弹出层
+      showPermiss: false, // 权限分配弹出层
       roleForm: {
         name: '',
         description: ''
       },
       rules: {
         name: [{ required: true, message: '名称不能为空', trigger: 'blur' }]
-      }
+      },
+      permList: [], // 权限列表
+      propRule: {
+        label: 'name'
+      }, // 树形规则
+      roleId: '', // 当前角色ID
+      checkList: [] // 已分配的权限
     }
   },
   computed: {
@@ -191,11 +272,28 @@ export default {
         name: '',
         description: ''
       }
+    },
+
+    // 分配权限
+    async assignPerm(id) {
+      this.permList = tranListToTree(await getPermissionList(), '0')
+      const { permIds } = await getRoleDetail(id)
+      this.checkList = permIds
+      this.roleId = id
+      this.showPermiss = true
+    },
+    async isOk() {
+      await assignPerm({ permIds: this.$refs.permTree.getCheckedKeys(), id: this.roleId })
+      this.$message.success('权限分配成功!')
+      this.showPermiss = false
+    },
+    isCancle() {
+      this.checkList = []
+      this.showPermiss = false
     }
   }
 }
 </script>
 
 <style>
-
 </style>
