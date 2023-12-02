@@ -48,6 +48,7 @@ export default {
       this.dialogVisible = true
     },
     removeImg(file, fileList) {
+      this.visible = false
       this.fileList = fileList
       /* 方案二：
       this.filelist=this.filelist.filter(item=>item.uid!==file.uid)

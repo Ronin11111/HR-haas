@@ -13,6 +13,18 @@
         <el-table v-loading="loading" border :data="employeeList" style="width: 100%">
           <el-table-column type="index" label="序号" sortable="" />
           <el-table-column label="姓名" sortable="" prop="username" />
+          <el-table-column label="头像" width="120px" align="center">
+            <template v-slot="{row}">
+              <img
+                slot="reference"
+                v-imagerror="require('@/assets/common/bigUserHeader.png')"
+                :src="row.imagerror "
+                style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"
+                alt=""
+                @click="showQrcode(row.imagerror)"
+              >
+            </template>
+          </el-table-column>
           <el-table-column label="工号" sortable="" prop="workNumber" />
           <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" :formatter="formatEmployment" />
           <el-table-column label="部门" sortable="" prop="departmentName" />
@@ -44,9 +56,10 @@
             @current-change="pageChange"
           />
         </el-row>
+        <el-dialog title="二维码" :visible.sync="showQr">
+          <canvas ref="qrcode" /></el-dialog>
       </el-card>
     </div>
-    <add-employee :show-dialog.sync="isShow" />
   </div>
 </template>
 
@@ -55,6 +68,7 @@ import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 import AddEmployee from '@/views/employees/component/add-employee.vue'
 import { formatDate } from '@/filters'
+import QrCode from 'qrcode'
 
 export default {
   components: {
@@ -69,7 +83,8 @@ export default {
         total: 0
       },
       loading: false, // 遮罩效果
-      isShow: false
+      isShow: false,
+      showQr: false
     }
   },
   created() {
@@ -144,6 +159,19 @@ export default {
           return item[header[key]]
         })
       })
+    },
+
+    // 将头像转换为二维码
+    showQrcode(url) {
+      if (url) {
+        this.showQr = true
+        // 注意：在弹层未渲染前，获取不到弹层中的canvas对象
+        this.$nextTick(() => {
+          QrCode.toCanvas(this.$refs.qrcode, url)
+        })
+      } else {
+        this.$message.warning('该用户为上传头像！')
+      }
     }
   }
 }

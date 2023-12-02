@@ -1,20 +1,27 @@
 <template>
   <div class="job-info">
     <!-- 基础信息 -->
+    <el-row type="flex" justify="end">
+      <el-tooltip content="打印岗位信息">
+        <router-link :to="`/employees/print/${userId}?type=job`">
+          <i class="el-icon-printer" />
+        </router-link>
+      </el-tooltip>
+    </el-row>
     <el-form label-width="220px">
       <div class="block">
         <div class="title">基础信息</div>
         <el-form-item label="岗位">
           <el-input v-model="formData.post" placeholder="请输入" class="inputW" />
         </el-form-item>
-        <!-- <el-form-item label="转正日期">
-            <el-date-picker
-              v-model="formData.dateOfCorrection"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
-          </el-form-item> -->
+        <el-form-item label="转正日期">
+          <el-date-picker
+            v-model="formData.dateOfCorrection"
+            type="date"
+            placeholder="选择日期"
+            value-format="yyyy-MM-dd"
+          />
+        </el-form-item>
         <el-form-item label="转正状态">
           <el-select v-model="formData.stateOfCorrection" placeholder="请选择" disabled>
             <el-option

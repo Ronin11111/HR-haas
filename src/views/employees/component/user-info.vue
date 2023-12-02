@@ -2,6 +2,14 @@
   <div class="user-info">
     <!-- 个人信息 -->
     <el-form label-width="220px">
+      <!-- 打印按钮 -->
+      <el-row type="flex" justify="end">
+        <el-tooltip content="打印个人基本信息">
+          <router-link :to="`/employees/print/${userId}?type=personal`">
+            <i class="el-icon-printer" />
+          </router-link>
+        </el-tooltip>
+      </el-row>
       <!-- 工号 入职时间 -->
       <el-row class="inline-info">
         <el-col :span="12">
@@ -58,7 +66,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-
+            <ImageUpload ref="staffAvatr" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -87,9 +95,9 @@
         </el-form-item>
         <!-- 个人头像 -->
         <!-- 员工照片 -->
-
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <ImageUpload ref="staffPhoto" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -363,14 +371,26 @@ export default {
   },
   methods: {
     async getUserDetail() {
+      if (this.userInfo.staffPhoto && this.userInfo.staffPhoto.trim()) {
+        this.$refs.staffAvatr.fileList = [{ url: this.userInfo.staffPhoto, upload: true }]
+      }
       this.userInfo = await getUserDetail(this.userId)
     },
     async getPersonalDetail() {
+      if (this.formData.staffPhoto && this.userInfo.staffPhoto.trim()) {
+        this.$refs.staffPhoto.fileList = [{ url: this.formData.staffPhoto, upload: true }]
+      }
       this.formData = await getPersonalDetail(this.userId)
     },
     async saveUser() {
       try {
-        await updatePersonal(this.userInfo)
+        const fileList = this.$refs.staffAvatr.fileList
+        // 判断图片是否上传成功
+        if (!fileList.some(item => item.upload)) {
+          this.$message.error('图片正在上传中')
+          return
+        }
+        await updatePersonal({ ...this.userInfo, staffPhoto: fileList && fileList.length ? fileList[0].url : ' ' })
         this.$message.success('更新成功！')
       } catch (err) {
         console.log(err)
@@ -378,7 +398,12 @@ export default {
     },
     async savePersonal() {
       try {
-        await saveUserDetailById(this.formData)
+        const fileList = this.$refs.staffPhoto.fileList
+        if (!fileList.some(item => item.upload)) {
+          this.$message.error('图片正在上传中')
+          return
+        }
+        await saveUserDetailById({ ...this.formData, staffPhoto: fileList && fileList.length ? fileList[0].url : ' ' })
         this.$message.success('保存成功！')
       } catch (err) {
         console.log(err)
