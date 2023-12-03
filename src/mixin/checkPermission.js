@@ -1,10 +1,10 @@
-import store from '@/store'
 // 定义检查功能权限的mixin方法
 
+import store from '@/store'
 export default {
   methods: {
     checkPermission(key) {
-      const userInfo = store.state.user
+      const { userInfo } = store.state.user
       if (userInfo.roles.points && userInfo.roles.points.length) {
         return userInfo.roles.points.some(item => item === key)
       }
