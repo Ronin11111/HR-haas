@@ -15,6 +15,9 @@ import Component from '@/components'
 // 引入全局过滤器
 import * as filters from '@/filters'
 
+// 引入mixin方法
+import checkPermission from '@/mixin/checkPermission'
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -50,6 +53,9 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.use(Component)
+
+// 全局注册mixin
+Vue.mixin(checkPermission)
 
 Vue.config.productionTip = false
 

@@ -2,6 +2,7 @@
 import { login, getInfo, getUserDetail } from '@/api/user'
 // 引入获取，修改，删除token的方法
 import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth'
+import { resetRouter } from '@/router'
 
 // 存储用户信息
 export default {
@@ -34,6 +35,11 @@ export default {
     logout(context) {
       context.commit('removeToken')
       context.commit('removeUserInfo')
+      // 重置路由
+      resetRouter()
+      // 重置权限路由存储
+      // 注意：加锁的子路由访问另一个子路由空间的mutations
+      context.commit('permission/addRouter', [], { root: true })
     }
   },
   mutations: {
@@ -54,6 +60,7 @@ export default {
     },
     // 2.删除
     removeUserInfo(state) {
+      // 重置信息
       state.userInfo = {}
     }
   }

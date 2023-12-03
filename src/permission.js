@@ -3,7 +3,6 @@ import store from '@/store'
 // 引入进度条插件
 import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { error } from 'jquery'
 
 // 设置白名单
 const whiteList = ['/login', '/404']
@@ -25,7 +24,7 @@ router.beforeEach(async function(to, from, next) {
       // 没有用户资料，则获取资料
       const { roles } = await store.dispatch('user/getUserInfo')
       // 依据用户资料，动态筛选路由
-      const routes = store.dispatch('permission', roles.menus)
+      const routes = await store.dispatch('permission/filterRouter', roles.menus)
       console.log(routes)
       // 调用router.addRoutes(),动态添加路由
       router.addRoutes(routes)
