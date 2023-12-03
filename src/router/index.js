@@ -96,7 +96,7 @@ const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   // 合并动态，静态路由
-  routes: [...constantRoutes, ...asyncRoutes]
+  routes: [...constantRoutess]
 })
 
 // 实例化路由

@@ -23,9 +23,17 @@ router.beforeEach(async function(to, from, next) {
     // 2.1.判断是否有用户资料
     if (!store.getters.userId) {
       // 没有用户资料，则获取资料
-      await store.dispatch('user/getUserInfo')
+      const { roles } = await store.dispatch('user/getUserInfo')
+      // 依据用户资料，动态筛选路由
+      const routes = store.dispatch('permission', roles.menus)
+      console.log(routes)
+      // 调用router.addRoutes(),动态添加路由
+      router.addRoutes(routes)
+      // 注意：再addRoutes(),必须使用next(to.path)
+      next(to.path)
+    } else {
+      next()
     }
-    next()
   } else {
     // 1.无token,判断是否为白名单
     if (whiteList.some(obj => obj === to.path)) {

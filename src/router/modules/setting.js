@@ -1,7 +1,7 @@
 import Layout from '@/layout'
 export default {
   path: '/setting',
-  name: 'setting',
+  name: 'settings',
   component: Layout,
   children: [{
     // 当二级路由路径为空时，则为默认路由
