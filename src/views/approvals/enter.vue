@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { information, getReviewHistory } from '@/api/approvals'
+import { getInformation, getReviewHistory } from '@/api/approvals'
 
 export default {
   name: 'UsersTableIndex',
@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     async getInformation() {
-      const { data } = await information({ id: 1 })
+      const { data } = await getInformation({ id: 1 })
       this.getReviewHistory()
       this.information = data
     },

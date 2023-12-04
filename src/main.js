@@ -18,6 +18,9 @@ import * as filters from '@/filters'
 // 引入mixin方法
 import checkPermission from '@/mixin/checkPermission'
 
+// 引入多语言包
+import i18n from '@/lang'
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -48,7 +51,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+// 设定语言包
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key)
+})
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
@@ -63,5 +69,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })

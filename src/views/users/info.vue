@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { getUserDetailById } from '@/api/user'
+import { getUserDetail } from '@/api/user'
 import { updateUser } from '@/api/approvals'
 import { updatePersonal, getPersonalDetail } from '@/api/employees'
 import { mapGetters } from 'vuex'
@@ -70,7 +70,7 @@ export default {
     },
     async getUserInfo() {
       this.loading = true
-      const detailData = await getUserDetailById(this.userId)
+      const detailData = await getUserDetail(this.userId)
       const personData = await getPersonalDetail(this.userId)
       detailData.sex = personData.sex
       detailData.dateOfBirth = personData.dateOfBirth
