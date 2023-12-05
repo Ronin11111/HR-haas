@@ -1,8 +1,6 @@
 // 导出一个axios的实例  而且这个实例要有请求拦截器 响应拦截器
-import { config } from '@vue/test-utils'
 import axios from 'axios'
 import { Message } from 'element-ui'
-import { error } from 'jquery'
 import store from '@/store'
 import { getTimeStamp } from '@/utils/auth'
 import router from '@/router'
